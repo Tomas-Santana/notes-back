@@ -4,6 +4,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+
+
+	"notes-back/models"
 )
 
 func Start() {
@@ -13,5 +16,8 @@ func Start() {
 			"message": "Hello, World!",
 		})
 	})
+	
+	models.CreateModelRoutes(models.Album{}, r.Group("/api"))
+
 	r.Run("localhost:8080")
 }
