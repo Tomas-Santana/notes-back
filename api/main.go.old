@@ -1,0 +1,44 @@
+// package server
+
+// import (
+// 	"github.com/gin-gonic/gin"
+
+// 	"context"
+// 	"notes-back/database"
+// 	"notes-back/models"
+// 	"notes-back/server/auth"
+// 	"os"
+
+// 	"github.com/joho/godotenv"
+// )
+
+// func Start() {
+// 	loadEnv()
+
+// 	mongo_uri := os.Getenv("MONGO_URI")
+// 	db_name := os.Getenv("DB_NAME")
+
+// 	if mongo_uri == "" || db_name == "" {
+// 		panic("MONGO_URI and DB_NAME must be set in .env file")
+// 	}
+// 	client := database.GetMongoClient(mongo_uri)
+// 	defer client.Disconnect(context.TODO())
+// 	db := client.Database(db_name)
+
+// 	r := gin.Default()
+
+// 	modelsGroup := r.Group("/models")
+// 	authGroup := r.Group("/auth")
+// 	models.CreateRoutes(modelsGroup, db)
+// 	auth.CreateRoutes(authGroup, db)
+
+// 	r.Run("localhost:8080")
+
+// }
+
+// func loadEnv() {
+// 	err := godotenv.Load()
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// }
