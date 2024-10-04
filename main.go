@@ -8,11 +8,16 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
 
+	"flag"
 	"notes-back/database"
 )
 
 func main() {
-	loadEnv()
+	env := flag.String("environment", "test", "environment") 
+	flag.Parse()
+
+
+	loadEnv(*env)
 	mongo_uri := os.Getenv("MONGO_URI")
 	db_name := os.Getenv("DB_NAME")
 
@@ -32,8 +37,8 @@ func main() {
 }
 
 
-func loadEnv() {
-	err := godotenv.Load()
+func loadEnv(env string) {
+	err := godotenv.Load(".env." + env)
 	if err != nil {
 		panic(err)
 	}
