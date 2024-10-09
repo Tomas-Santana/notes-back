@@ -9,26 +9,23 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-
 func (a *AuthRouter) Login(c *gin.Context) {
-	var payload requestTypes.Login
+	var payload requestTypes.LoginRequest
 	if err := helpers.ValidatePayload(c, a.validator, &payload); err != nil {
-		return	
+		return
 	}
 
 	user, err := a.db.GetUserByEmail(payload.Email)
 
 	if err != nil {
-		c.JSON(400, gin.H{"error": "invalid email or password"})
+		c.JSON(401, gin.H{"error": "Email o contraseña incorrectos"})
 		return
 	}
 
 	if !auth.CheckPassword(payload.Password, user.Password) {
-		c.JSON(400, gin.H{"error": "invalid email or password"})
+		c.JSON(401, gin.H{"error": "Email o contraseña incorrectos"})
 		return
 	}
-
-
 
 	user.Password = ""
 
@@ -39,5 +36,4 @@ func (a *AuthRouter) Login(c *gin.Context) {
 		"user":  user,
 	})
 
-	
 }

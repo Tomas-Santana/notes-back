@@ -14,6 +14,7 @@ import (
 
 func main() {
 	env := flag.String("environment", "test", "environment") 
+	listenaddr := flag.String("listenaddr", "192.168.18.12:8080", "server listen address")
 	flag.Parse()
 
 
@@ -31,7 +32,7 @@ func main() {
 	if err := db.Connect(); err != nil {
 		panic(err)
 	}
-	server := api.NewServer("localhost:8080", db, validator)
+	server := api.NewServer(*listenaddr, db, validator)
 
 	log.Fatal(server.Start())
 }
