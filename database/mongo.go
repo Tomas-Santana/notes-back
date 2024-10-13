@@ -13,14 +13,14 @@ import (
 
 type MongoDatabase struct {
 	connectionString string
-	dbName		   string
+	dbName           string
 	client           *mongo.Client
 }
 
 func NewMongoDatabase(connectionString string, dbName string) *MongoDatabase {
 	return &MongoDatabase{
 		connectionString: connectionString,
-		dbName:		   dbName,
+		dbName:           dbName,
 	}
 }
 
@@ -53,7 +53,7 @@ func (db *MongoDatabase) GetUserById(userId string) (types.User, error) {
 	}
 
 	return user, nil
-}	
+}
 
 func (db *MongoDatabase) GetUserByEmail(email string) (types.User, error) {
 	coll := db.client.Database(db.dbName).Collection("user")
@@ -85,7 +85,7 @@ func (db *MongoDatabase) CreateUser(user *types.User) error {
 				}
 			}
 		} else {
-			return  err
+			return err
 		}
 	}
 
@@ -110,6 +110,34 @@ func (db *MongoDatabase) CreateNote(userId string, note *types.Note) (string, er
 	res, err := coll.InsertOne(context.Background(), note)
 
 	return res.InsertedID.(primitive.ObjectID).Hex(), err
+}
+
+func (db *MongoDatabase) UpdateNote(userID string, note *types.Note) error {
+
+	noteIdObj, err := primitive.ObjectIDFromHex(note.ID)
+
+	if err != nil {
+		return err
+	}
+	userIDObj, err := primitive.ObjectIDFromHex(userID)
+
+	if err != nil {
+		return err
+	}
+
+	coll := db.client.Database(db.dbName).Collection("note")
+
+	updateFields := bson.D{
+		{Key: "title", Value: note.Title},
+		{Key: "content", Value: note.Content},
+		{Key: "html", Value: note.Html},
+		{Key: "preview", Value: note.Preview},
+		{Key: "updatedAt", Value: note.UpdatedAt},
+	}
+
+	_, err = coll.UpdateOne(context.Background(), bson.D{{Key: "_id", Value: noteIdObj}, {Key: "userID", Value: userIDObj,}}, bson.D{{Key: "$set", Value: updateFields}})
+
+	return err
 }
 
 func (db *MongoDatabase) GetUserNotes(userId string) ([]types.Note, error) {

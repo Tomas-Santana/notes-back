@@ -9,6 +9,7 @@ type Database interface {
 	GetUserByEmail(string) (types.User, error)
 	CreateUser(*types.User) error
 	CreateNote(string, *types.Note) (string, error)
+	UpdateNote(string, *types.Note) error
 	GetUserNotes(string) ([]types.Note, error)
 	GetNoteById(string) (types.Note, error)
 	StringToId(string) (interface{}, error)

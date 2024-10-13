@@ -17,6 +17,11 @@ func (rg *ResourceGroup) PostNote(c *gin.Context) {
 	// get userID from content
 	userID, ok := c.Get("userID")
 
+	if newNote.ID != "" {
+		c.JSON(400, gin.H{"error": "No se puede crear una nota con un ID. Debes usar PUT /note"})
+		return
+	}
+
 
 	if !ok {
 		c.JSON(403, gin.H{"error": "user not found"})
@@ -26,6 +31,8 @@ func (rg *ResourceGroup) PostNote(c *gin.Context) {
 	if err := helpers.ValidatePayload(c, rg.validator, &newNote); err != nil {
 		return
 	}
+
+
 	var preview string
 	if utf8.RuneCountInString(newNote.Content) < 100 {
 		preview = newNote.Content
@@ -52,7 +59,6 @@ func (rg *ResourceGroup) PostNote(c *gin.Context) {
 
 	c.JSON(200, gin.H{
 		"noteId": noteId,
-		"note":   note,
 	})
 
 		

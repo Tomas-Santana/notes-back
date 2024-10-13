@@ -27,4 +27,5 @@ func (rg *ResourceGroup) RegisterRoutes() {
 	rg.group.POST("/note", rg.PostNote)
 	rg.group.GET("/notes", rg.MyNotes)
 	rg.group.GET("/note/:id", rg.GetNote)
+	rg.group.PUT("/note", rg.PutNote)
 }
