@@ -3,19 +3,13 @@ package resource
 import (
 	"fmt"
 	"notes-back/helpers"
-	"notes-back/types"
 	"notes-back/types/requestTypes"
-	"time"
-
-	"unicode/utf8"
-
 	"github.com/gin-gonic/gin"
 )
 
 func (rg *ResourceGroup) PutNote(c *gin.Context) {
-	var newNote requestTypes.NewNote
+	var noteUpdate requestTypes.UpdateNote
 
-	// get userID from content
 	userID, ok := c.Get("userID")
 
 	if !ok {
@@ -23,38 +17,19 @@ func (rg *ResourceGroup) PutNote(c *gin.Context) {
 		return
 	}
 
-	
-	if err := helpers.ValidatePayload(c, rg.validator, &newNote); err != nil {
+	if err := helpers.ValidatePayload(c, rg.validator, &noteUpdate); err != nil {
 		return
 	}
 
-	if newNote.ID == "" {
+	if noteUpdate.ID == "" {
 		c.JSON(400, gin.H{"error": "Se requiere un ID"})
 		return
 	}
 
-	var preview string
-	if utf8.RuneCountInString(newNote.Content) < 100 {
-		preview = newNote.Content
-	} else {
-		preview = newNote.Content[:100]
-	}
-
-	fmt.Println("newNote.ID", newNote.ID)
-
-	note := types.Note{
-		ID: newNote.ID,
-		Title:   newNote.Title,
-		Content: newNote.Content,
-		Html: newNote.Html,
-		Preview: preview,
-		UpdatedAt: time.Now(),
-	}
+	fmt.Println("noteUpdate.ID", noteUpdate.ID)
 
 
-
-	
-	err := rg.db.UpdateNote(userID.(string), &note)
+	err := rg.db.UpdateNote(userID.(string), &noteUpdate)
 
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -62,10 +37,7 @@ func (rg *ResourceGroup) PutNote(c *gin.Context) {
 	}
 
 	c.JSON(200, gin.H{
-		"noteId": newNote.ID,
+		"noteId": noteUpdate.ID,
 	})
-
-		
-
 
 }

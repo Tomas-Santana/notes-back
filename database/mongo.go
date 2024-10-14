@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"notes-back/types"
+	"notes-back/types/requestTypes"
+
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -112,9 +114,9 @@ func (db *MongoDatabase) CreateNote(userId string, note *types.Note) (string, er
 	return res.InsertedID.(primitive.ObjectID).Hex(), err
 }
 
-func (db *MongoDatabase) UpdateNote(userID string, note *types.Note) error {
+func (db *MongoDatabase) UpdateNote(userID string, update *requestTypes.UpdateNote) error {
 
-	noteIdObj, err := primitive.ObjectIDFromHex(note.ID)
+	noteIdObj, err := primitive.ObjectIDFromHex(update.ID)
 
 	if err != nil {
 		return err
@@ -127,13 +129,9 @@ func (db *MongoDatabase) UpdateNote(userID string, note *types.Note) error {
 
 	coll := db.client.Database(db.dbName).Collection("note")
 
-	updateFields := bson.D{
-		{Key: "title", Value: note.Title},
-		{Key: "content", Value: note.Content},
-		{Key: "html", Value: note.Html},
-		{Key: "preview", Value: note.Preview},
-		{Key: "updatedAt", Value: note.UpdatedAt},
-	}
+	updateFields := make(map[string]any)
+
+	GetNoteUpdateFields(update, &updateFields)
 
 	_, err = coll.UpdateOne(context.Background(), bson.D{{Key: "_id", Value: noteIdObj}, {Key: "userID", Value: userIDObj,}}, bson.D{{Key: "$set", Value: updateFields}})
 

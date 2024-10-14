@@ -1,6 +1,9 @@
 package database
 
-import "notes-back/types"
+import (
+	"notes-back/types"
+	"notes-back/types/requestTypes"
+)
 
 type Database interface {
 	Connect()	error
@@ -9,7 +12,7 @@ type Database interface {
 	GetUserByEmail(string) (types.User, error)
 	CreateUser(*types.User) error
 	CreateNote(string, *types.Note) (string, error)
-	UpdateNote(string, *types.Note) error
+	UpdateNote(string, *requestTypes.UpdateNote) error
 	GetUserNotes(string) ([]types.Note, error)
 	GetNoteById(string) (types.Note, error)
 	StringToId(string) (interface{}, error)

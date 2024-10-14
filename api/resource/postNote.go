@@ -6,13 +6,13 @@ import (
 	"notes-back/types/requestTypes"
 	"time"
 
+	"unicode/utf8"
 
 	"github.com/gin-gonic/gin"
-	"unicode/utf8"
 )
 
 func (rg *ResourceGroup) PostNote(c *gin.Context) {
-	var newNote requestTypes.NewNote
+	var newNote requestTypes.CreateNote
 
 	// get userID from content
 	userID, ok := c.Get("userID")
@@ -21,7 +21,6 @@ func (rg *ResourceGroup) PostNote(c *gin.Context) {
 		c.JSON(400, gin.H{"error": "No se puede crear una nota con un ID. Debes usar PUT /note"})
 		return
 	}
-
 
 	if !ok {
 		c.JSON(403, gin.H{"error": "user not found"})
@@ -32,7 +31,6 @@ func (rg *ResourceGroup) PostNote(c *gin.Context) {
 		return
 	}
 
-
 	var preview string
 	if utf8.RuneCountInString(newNote.Content) < 100 {
 		preview = newNote.Content
@@ -41,15 +39,14 @@ func (rg *ResourceGroup) PostNote(c *gin.Context) {
 	}
 
 	note := types.Note{
-		Title:   newNote.Title,
-		Content: newNote.Content,
-		Html: newNote.Html,
+		Title:     newNote.Title,
+		Content:   newNote.Content,
+		Html:      newNote.Html,
 		CreatedAt: time.Now(),
-		Preview: preview,
+		Preview:   preview,
 		UpdatedAt: time.Now(),
 	}
 
-	
 	noteId, err := rg.db.CreateNote(userID.(string), &note)
 
 	if err != nil {
@@ -60,8 +57,5 @@ func (rg *ResourceGroup) PostNote(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"noteId": noteId,
 	})
-
-		
-
 
 }
