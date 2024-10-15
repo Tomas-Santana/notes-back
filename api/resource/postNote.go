@@ -1,6 +1,7 @@
 package resource
 
 import (
+	"fmt"
 	"notes-back/helpers"
 	"notes-back/types"
 	"notes-back/types/requestTypes"
@@ -26,6 +27,8 @@ func (rg *ResourceGroup) PostNote(c *gin.Context) {
 		c.JSON(403, gin.H{"error": "user not found"})
 		return
 	}
+
+	fmt.Println("noteimportance", newNote)
 
 	if err := helpers.ValidatePayload(c, rg.validator, &newNote); err != nil {
 		return

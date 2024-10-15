@@ -11,6 +11,7 @@ type Note struct {
 	Content    string      `bson:"content" json:"content"`
 	Html       string      `bson:"html" json:"html"`
 	IsFavorite bool        `bson:"isFavorite" json:"isFavorite"`
+	Importance int         `bson:"importance" json:"importance"`
 	CreatedAt  time.Time   `bson:"createdAt" json:"createdAt"`
 	UpdatedAt  time.Time   `bson:"updatedAt" json:"updatedAt"`
 	UserID     interface{} `bson:"userID" json:"userID"`

@@ -23,6 +23,10 @@ func GetNoteUpdateFields(update *requestTypes.UpdateNote, fields *map[string]any
 		(*fields)["isFavorite"] = *update.IsFavorite
 	}
 
+	if update.Importance != nil {
+		(*fields)["importance"] = *update.Importance
+	}
+
 	if _, ok := (*fields)["content"]; ok {
 		var preview string
 		if utf8.RuneCountInString((*fields)["content"].(string)) > 100 {
