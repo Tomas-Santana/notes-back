@@ -14,3 +14,7 @@ type UpdateNote struct {
 	Html    *string `json:"html" binding:"omitempty,min=3,max=1000"`
 	IsFavorite *bool `json:"isFavorite" binding:"omitempty"`
 }
+
+type DeleteNote struct {
+	ID 		string `bson:"_id,omitempty" json:"_id" binding:"required"`
+}

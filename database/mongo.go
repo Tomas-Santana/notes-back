@@ -177,3 +177,22 @@ func (db *MongoDatabase) GetNoteById(noteId string) (types.Note, error) {
 
 	return note, err
 }
+
+func (db *MongoDatabase) DeleteNote(id []string) error {
+	var objectIds []primitive.ObjectID
+
+	for _, id := range id {
+		objectId, err := primitive.ObjectIDFromHex(id)
+		if err!= nil {
+      return err
+    }
+		objectIds = append(objectIds, objectId)
+	}
+
+	filter := bson.M{"_id": bson.M{"$in": objectIds}}
+
+	coll := db.client.Database(db.dbName).Collection("note")
+	_, err := coll.DeleteMany(context.Background(), filter)
+
+	return err
+}

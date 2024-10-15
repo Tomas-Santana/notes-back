@@ -15,5 +15,6 @@ type Database interface {
 	UpdateNote(string, *requestTypes.UpdateNote) error
 	GetUserNotes(string) ([]types.Note, error)
 	GetNoteById(string) (types.Note, error)
+	DeleteNote([]string) error
 	StringToId(string) (interface{}, error)
 }
