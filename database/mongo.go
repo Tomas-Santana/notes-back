@@ -209,3 +209,73 @@ func (db *MongoDatabase) DeleteNoteById(id string) (error) {
 
   return err
 }
+
+func (db *MongoDatabase) CreateCategory(category *types.Category) error {
+
+	userIdObj, err := primitive.ObjectIDFromHex(category.UserID.(string))
+
+	if err != nil {
+		return err
+	}
+
+	category.UserID = userIdObj
+
+	coll := db.client.Database(db.dbName).Collection("category")
+
+	res, err := coll.InsertOne(context.Background(), category)
+
+	if err != nil {
+		if mongoErr, ok := err.(mongo.WriteException); ok {
+			for _, we := range mongoErr.WriteErrors {
+				if we.Code == 11000 {
+					return fmt.Errorf("category with name %s already exists", category.Name)
+				}
+			}
+		} else {
+			return err
+		}
+	}
+
+	category.ID = res.InsertedID.(primitive.ObjectID).Hex()
+
+	return nil
+}
+
+func (db *MongoDatabase) GetCategories(userId string) ([]types.Category, error) {
+	userIdObj, err := primitive.ObjectIDFromHex(userId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	coll := db.client.Database(db.dbName).Collection("category")
+
+	filter := bson.D{{Key: "userID", Value: userIdObj}}
+	cursor, err := coll.Find(context.Background(), filter)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var categories []types.Category
+
+	err = cursor.All(context.Background(), &categories)
+
+	fmt.Println(categories)
+
+	return categories, err
+}
+
+func (db *MongoDatabase) DeleteCategory(id string) error {
+	categoryIdObj, err := primitive.ObjectIDFromHex(id)
+
+	if err != nil {
+		return err
+	}
+
+	coll := db.client.Database(db.dbName).Collection("category")
+
+	_, err = coll.DeleteOne(context.Background(), bson.D{{Key: "_id", Value: categoryIdObj}})
+
+	return err
+}

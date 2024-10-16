@@ -15,4 +15,5 @@ type Note struct {
 	CreatedAt  time.Time   `bson:"createdAt" json:"createdAt"`
 	UpdatedAt  time.Time   `bson:"updatedAt" json:"updatedAt"`
 	UserID     interface{} `bson:"userID" json:"userID"`
+	Categories   []NoteCategory `bson:"categories" json:"categories"`
 }

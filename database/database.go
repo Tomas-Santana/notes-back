@@ -18,4 +18,7 @@ type Database interface {
 	DeleteNote([]string) error
 	DeleteNoteById(string) error
 	StringToId(string) (interface{}, error)
+	CreateCategory(*types.Category) (error)
+	GetCategories(string) ([]types.Category, error)
+	DeleteCategory(string) error
 }
