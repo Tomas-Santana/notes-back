@@ -25,6 +25,7 @@ func NewRouter(db database.Database, group *gin.RouterGroup, validator *validato
 func (rg *ResourceGroup) RegisterRoutes() {
 	rg.group.Use(middleware.Authorize())
 	rg.group.POST("/note", rg.PostNote)
+	rg.group.DELETE("/note/:id", rg.DeleteNoteById)
 	rg.group.GET("/notes", rg.MyNotes)
 	rg.group.GET("/note/:id", rg.GetNote)
 	rg.group.PUT("/note", rg.PutNote)

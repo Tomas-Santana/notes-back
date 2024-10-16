@@ -178,10 +178,10 @@ func (db *MongoDatabase) GetNoteById(noteId string) (types.Note, error) {
 	return note, err
 }
 
-func (db *MongoDatabase) DeleteNote(id []string) error {
+func (db *MongoDatabase) DeleteNote(ids []string) error {
 	var objectIds []primitive.ObjectID
 
-	for _, id := range id {
+	for _, id := range ids {
 		objectId, err := primitive.ObjectIDFromHex(id)
 		if err!= nil {
       return err
@@ -195,4 +195,17 @@ func (db *MongoDatabase) DeleteNote(id []string) error {
 	_, err := coll.DeleteMany(context.Background(), filter)
 
 	return err
+}
+
+func (db *MongoDatabase) DeleteNoteById(id string) (error) {
+	noteIdObj, err := primitive.ObjectIDFromHex(id)
+
+  if err!= nil {
+    return err
+  }
+
+  coll := db.client.Database(db.dbName).Collection("note")
+  _, err = coll.DeleteOne(context.Background(), bson.D{{Key: "_id", Value: noteIdObj}})
+
+  return err
 }
