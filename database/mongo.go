@@ -71,6 +71,49 @@ func (db *MongoDatabase) GetUserByEmail(email string) (types.User, error) {
 	return user, nil
 }
 
+func (db *MongoDatabase) AddResetCode(email string, code string) error {
+	coll := db.client.Database(db.dbName).Collection("resetCode")
+
+	_, err := coll.InsertOne(context.Background(), map[string]string{"email": email, "code": code})
+
+	return err
+}
+
+func (db *MongoDatabase) GetResetCode(code string) (string, error) {
+	coll := db.client.Database(db.dbName).Collection("resetCode")
+
+	var resetCode map[string]string
+
+	fmt.Println(code)
+
+	err := coll.FindOne(context.Background(), map[string]string{"code": code}).Decode(&resetCode)
+
+	if err != nil {
+		return "", err
+	}
+
+	return resetCode["email"], nil
+}
+
+func (db *MongoDatabase) DeleteResetCode(code string) error {
+	coll := db.client.Database(db.dbName).Collection("resetCode")
+
+	_, err := coll.DeleteOne(context.Background(), map[string]string{"code": code})
+
+	return err
+}
+
+func (db *MongoDatabase) UpdateUserPassword(email string, password string) error {
+	coll := db.client.Database(db.dbName).Collection("user")
+
+	_, err := coll.UpdateOne(context.Background(), 
+		bson.D{{Key: "email", Value: email}},
+		bson.D{{Key: "$set", Value: bson.D{{Key: "password", Value: password}}}})
+		
+
+	return err
+}
+
 // This function does not implement any validation.
 //
 // When inserted into the database, sets the UserID field and unsets the Password field

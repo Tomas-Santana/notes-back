@@ -11,6 +11,10 @@ type Database interface {
 	GetUserById(string) (types.User, error)
 	GetUserByEmail(string) (types.User, error)
 	CreateUser(*types.User) error
+	UpdateUserPassword(string, string) error
+	AddResetCode(string, string) error
+	GetResetCode(string) (string, error)
+	DeleteResetCode(string) error
 	CreateNote(string, *types.Note) (string, error)
 	UpdateNote(string, *requestTypes.UpdateNote) error
 	GetUserNotes(string) ([]types.Note, error)
