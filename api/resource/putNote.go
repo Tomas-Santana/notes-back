@@ -10,6 +10,8 @@ import (
 func (rg *ResourceGroup) PutNote(c *gin.Context) {
 	var noteUpdate requestTypes.UpdateNote
 
+	fmt.Println("categorias", noteUpdate.Title)
+
 	userID, ok := c.Get("userID")
 
 	if !ok {
@@ -25,9 +27,6 @@ func (rg *ResourceGroup) PutNote(c *gin.Context) {
 		c.JSON(400, gin.H{"error": "Se requiere un ID"})
 		return
 	}
-
-	fmt.Println("noteUpdate.ID", noteUpdate.ID)
-
 
 	err := rg.db.UpdateNote(userID.(string), &noteUpdate)
 

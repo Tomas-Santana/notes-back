@@ -176,6 +176,8 @@ func (db *MongoDatabase) UpdateNote(userID string, update *requestTypes.UpdateNo
 
 	GetNoteUpdateFields(update, &updateFields)
 
+	fmt.Println(updateFields)
+
 	_, err = coll.UpdateOne(context.Background(), bson.D{{Key: "_id", Value: noteIdObj}, {Key: "userID", Value: userIDObj,}}, bson.D{{Key: "$set", Value: updateFields}})
 
 	return err

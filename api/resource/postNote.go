@@ -40,8 +40,6 @@ func (rg *ResourceGroup) PostNote(c *gin.Context) {
 		preview = newNote.Content[:100]
 	}
 
-	noteCategories := convertToNoteCategories(newNote.Categories)
-
 	note := types.Note{
 		Title:     newNote.Title,
 		Content:   newNote.Content,
@@ -50,7 +48,7 @@ func (rg *ResourceGroup) PostNote(c *gin.Context) {
 		Preview:   preview,
 		UpdatedAt: time.Now(),
 		Importance: newNote.Importance,
-		Categories: noteCategories,
+		Categories: newNote.Categories,
 	}
 
 	fmt.Println("note", note)
@@ -66,16 +64,4 @@ func (rg *ResourceGroup) PostNote(c *gin.Context) {
 		"noteId": noteId,
 	})
 
-}
-
-
-func convertToNoteCategories(categories []string) []types.NoteCategory {
-	var noteCategories []types.NoteCategory
-	for _, category := range categories {
-			noteCategory := types.NoteCategory{
-					Name: category,
-			}
-			noteCategories = append(noteCategories, noteCategory)
-	}
-	return noteCategories
 }

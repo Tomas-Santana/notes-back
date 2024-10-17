@@ -27,6 +27,10 @@ func GetNoteUpdateFields(update *requestTypes.UpdateNote, fields *map[string]any
 		(*fields)["importance"] = *update.Importance
 	}
 
+	if update.Categories != nil {
+		(*fields)["categories"] = *update.Categories
+	}
+
 	if _, ok := (*fields)["content"]; ok {
 		var preview string
 		if utf8.RuneCountInString((*fields)["content"].(string)) > 100 {

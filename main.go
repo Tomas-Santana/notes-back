@@ -15,7 +15,7 @@ import (
 
 func main() {
 	env := flag.String("environment", "local", "environment") 
-	listenaddr := flag.String("listenaddr", "192.168.18.12:8080", "server listen address")
+	listenaddr := flag.String("listenaddr", "192.168.0.106:8080", "server listen address")
 	flag.Parse()
 
 	
