@@ -8,10 +8,13 @@ import (
 	middleware "notes-back/middleware"
 )
 
+
+
 type ResourceGroup struct {
 	db        database.Database
 	group     *gin.RouterGroup
 	validator *validator.Validate
+
 }
 
 func NewRouter(db database.Database, group *gin.RouterGroup, validator *validator.Validate) *ResourceGroup {

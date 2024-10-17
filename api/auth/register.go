@@ -30,7 +30,7 @@ func (a *AuthRouter) Register(c *gin.Context) {
 		return
 	}
 
-	token := auth.CreateToken(user.ID)
+	token := auth.CreateToken(&user)
 
 	c.JSON(200, gin.H{
 		"token": token,

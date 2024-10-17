@@ -1,8 +1,15 @@
 module notes-back
 
-go 1.21.4
+go 1.23
+
+toolchain go1.23.1
 
 require github.com/gin-gonic/gin v1.10.0
+
+require (
+	github.com/google/uuid v1.6.0 // indirect
+	github.com/resend/resend-go/v2 v2.12.0 // indirect
+)
 
 require (
 	github.com/bytedance/sonic v1.11.6 // indirect

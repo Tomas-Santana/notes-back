@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/resend/resend-go/v2"
 )
 
 type Server struct {
@@ -15,14 +16,16 @@ type Server struct {
 	database   database.Database
 	engine     *gin.Engine
 	validator  *validator.Validate
+	emailClient *resend.Client
 }
 
-func NewServer(listenAddr string, database database.Database, validator *validator.Validate) *Server {
+func NewServer(listenAddr string, database database.Database, validator *validator.Validate, emailClient *resend.Client) *Server {
 	return &Server{
 		listenAddr: listenAddr,
 		database:   database,
 		engine:     gin.Default(),
 		validator:  validator,
+		emailClient: emailClient,
 	}
 }
 func (s *Server) NewGroup(path string) *gin.RouterGroup {
@@ -42,7 +45,7 @@ func (s *Server) Start() error {
 
 func (s *Server) CreateRoutes() {
 	authGroup := s.NewGroup("/auth")
-	authRouter := auth.NewAuthRouter(s.database, authGroup, s.validator)
+	authRouter := auth.NewAuthRouter(s.database, authGroup, s.validator, s.emailClient)
 	authRouter.RegisterRoutes()
 
 	resourceGroup := s.NewGroup("/resource")

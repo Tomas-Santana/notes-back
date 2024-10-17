@@ -44,6 +44,10 @@ func Authorize() gin.HandlerFunc {
 		}
 		fmt.Println(claims.UserID, "claims")
 		c.Set("userID", claims.UserID)
+		c.Set("email", claims.Email)
+		c.Set("firstname", claims.Firstname)
+		c.Set("lastname", claims.Lastname)
+
 		c.Next()
 	}
 }
