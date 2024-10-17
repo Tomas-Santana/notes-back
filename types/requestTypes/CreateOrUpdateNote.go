@@ -6,6 +6,7 @@ type CreateNote struct {
 	Content    string `json:"content" binding:"required,min=1,max=1000"`
 	Html       string `json:"html" binding:"required,min=3,max=1000"`
 	Importance int    `json:"importance" binding:"min=0,max=5"`
+	Categories []string `json:"categories" binding:"omitempty"`
 }
 
 type UpdateNote struct {
@@ -15,6 +16,7 @@ type UpdateNote struct {
 	Html       *string `json:"html" binding:"omitempty,min=3,max=1000"`
 	IsFavorite *bool   `json:"isFavorite"`
 	Importance *int    `json:"importance" binding:"min=0,max=5"`
+	Categories *[]string `json:"categories" binding:"omitempty"`
 }
 
 type DeleteNote struct {
