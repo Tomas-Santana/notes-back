@@ -24,7 +24,7 @@ type Database interface {
 	StringToId(string) (interface{}, error)
 	CreateCategory(*types.Category) (error)
 	GetCategories(string) ([]types.Category, error)
-	DeleteCategory(string) error
+	DeleteCategory(string, string) error
 	DeleteUser(string) error
 	UpdateUser(*requestTypes.UpdateUser) error
 }

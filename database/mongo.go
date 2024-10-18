@@ -347,8 +347,15 @@ func (db *MongoDatabase) GetCategories(userId string) ([]types.Category, error) 
 	return categories, err
 }
 
-func (db *MongoDatabase) DeleteCategory(id string) error {
+func (db *MongoDatabase) DeleteCategory(id string, userID string) error {
 	categoryIdObj, err := primitive.ObjectIDFromHex(id)
+
+
+	if err != nil {
+		return err
+	}
+
+	userIDObj, err := primitive.ObjectIDFromHex(userID)
 
 	if err != nil {
 		return err
@@ -356,7 +363,7 @@ func (db *MongoDatabase) DeleteCategory(id string) error {
 
 	coll := db.client.Database(db.dbName).Collection("category")
 
-	_, err = coll.DeleteOne(context.Background(), bson.D{{Key: "_id", Value: categoryIdObj}})
+	_, err = coll.DeleteOne(context.Background(), bson.D{{Key: "_id", Value: categoryIdObj}, {Key: "userID", Value: userIDObj}})
 	if err != nil {
 		return err
 	}
