@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"notes-back/api"
 	"os"
@@ -10,13 +11,16 @@ import (
 
 	"flag"
 	"notes-back/database"
+
 	"github.com/resend/resend-go/v2"
 )
 
 func main() {
-	env := flag.String("environment", "local", "environment") 
+	env := flag.String("environment", "", "environment") 
 	listenaddr := flag.String("listenaddr", ":8080", "server listen address")
 	flag.Parse()
+
+	fmt.Println(env)
 
 	
 	loadEnv(*env)
@@ -47,6 +51,10 @@ func main() {
 
 
 func loadEnv(env string) {
+	if env == "" {
+		fmt.Println("Loading production environment")
+		return
+	}
 	err := godotenv.Load(".env." + env)
 	if err != nil {
 		panic(err)
