@@ -20,6 +20,8 @@ func(rg *ResourceGroup) PutUser(c *gin.Context) {
   }
 
 	c.JSON(200, gin.H{
-		"user": req.ID,
+		"_id": req.ID,
+		"firstName": req.FirstName,
+		"lastName": req.LastName,  
 	})
 }

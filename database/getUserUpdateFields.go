@@ -6,10 +6,10 @@ import (
 
 func GetUserUpdateFields(update *requestTypes.UpdateUser, fields *map[string]any) {
 	if update.FirstName!= nil {
-    (*fields)["first_name"] = *update.FirstName
+    (*fields)["firstName"] = *update.FirstName
   }
   if update.LastName!= nil {
-    (*fields)["last_name"] = *update.LastName
+    (*fields)["lastName"] = *update.LastName
   }
   
 } 

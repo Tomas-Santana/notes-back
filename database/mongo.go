@@ -142,6 +142,7 @@ func (db *MongoDatabase) CreateUser(user *types.User) error {
 
 func (db *MongoDatabase) UpdateUser(update *requestTypes.UpdateUser) error {
 	userIdObj, err := primitive.ObjectIDFromHex(update.ID)
+	fmt.Println(userIdObj)
 	if err!= nil {
     return err
   }
@@ -150,10 +151,19 @@ func (db *MongoDatabase) UpdateUser(update *requestTypes.UpdateUser) error {
 	updateFields := make(map[string]any)
 
 	GetUserUpdateFields(update, &updateFields)
+	fmt.Println("campos",updateFields)
+	fmt.Println("request",update)
 
-	_, err = coll.UpdateOne(context.Background(), bson.D{{Key: "_id", Value: userIdObj}}, bson.D{{Key: "$set", Value: updateFields}})
+	result, err := coll.UpdateOne(context.Background(), bson.D{{Key: "_id", Value: userIdObj}}, bson.D{{Key: "$set", Value: updateFields}})
+	if err != nil {
+		return err
+	}
+	if result.ModifiedCount == 0 {
+		return fmt.Errorf("user not found")
+	}
 
-	return err
+	fmt.Println("User updated succesfully: ", result.ModifiedCount)
+	return nil
 }
 
 func (db *MongoDatabase) DeleteUser(id string) error {
