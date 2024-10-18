@@ -1,6 +1,9 @@
 package requestTypes
 
-import "notes-back/types"
+import (
+	"notes-back/types"
+	"time"
+)
 
 type CreateNote struct {
 	ID         string `bson:"_id,omitempty" json:"_id"`
@@ -19,6 +22,7 @@ type UpdateNote struct {
 	IsFavorite *bool   `json:"isFavorite"`
 	Importance *int    `json:"importance" binding:"min=0,max=5"`
 	Categories *[]types.NoteCategory `json:"categories"`
+	UpdatedAt  *time.Time   `bson:"updatedAt" json:"updatedAt"`
 }
 
 type DeleteNote struct {
