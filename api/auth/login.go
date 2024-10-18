@@ -7,6 +7,7 @@ import (
 	"notes-back/types/requestTypes"
 
 	"github.com/gin-gonic/gin"
+	"strings"
 )
 
 func (a *AuthRouter) Login(c *gin.Context) {
@@ -15,7 +16,9 @@ func (a *AuthRouter) Login(c *gin.Context) {
 		return
 	}
 
-	user, err := a.db.GetUserByEmail(payload.Email)
+	user, err := a.db.GetUserByEmail(
+		strings.ToLower(payload.Email),
+	)
 
 	if err != nil {
 		c.JSON(401, gin.H{"error": "Email o contraseña incorrectos"})
@@ -37,3 +40,5 @@ func (a *AuthRouter) Login(c *gin.Context) {
 	})
 
 }
+
+

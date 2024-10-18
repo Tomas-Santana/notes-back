@@ -8,16 +8,17 @@ import (
 	"notes-back/types/requestTypes"
 
 	"github.com/gin-gonic/gin"
+	"strings"
 )
 
 func (a *AuthRouter) Register(c *gin.Context) {
 	var payload requestTypes.Register
 	if err := helpers.ValidatePayload(c, a.validator, &payload); err != nil {
-		return	
+		return
 	}
 
 	user := types.User{
-		Email:     payload.Email,
+		Email:     strings.ToLower(payload.Email),
 		Password:  auth.HashPassword(payload.Password),
 		FirstName: payload.FirstName,
 		LastName:  payload.LastName,
@@ -37,4 +38,26 @@ func (a *AuthRouter) Register(c *gin.Context) {
 		"user":  user,
 	})
 
+}
+
+
+func (a *AuthRouter) VerifyEmailAvialability(c *gin.Context) {
+	var payload requestTypes.VerifyEmail
+	if err := helpers.ValidatePayload(c, a.validator, &payload); err != nil {
+		return
+	}
+	_, err := a.db.GetUserByEmail(
+		strings.ToLower(payload.Email),
+	)
+
+	if err != nil {
+		c.JSON(200, gin.H{
+			"available": true,
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"available": false,
+	})
 }

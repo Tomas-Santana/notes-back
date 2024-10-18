@@ -32,6 +32,7 @@ func NewAuthRouter(db database.Database, group *gin.RouterGroup, validator *vali
 func (ag *AuthRouter) RegisterRoutes() {
 	ag.group.POST("/register", ag.Register)
 	ag.group.POST("/login", ag.Login)
+	ag.group.POST("/verify-email-availability", ag.VerifyEmailAvialability)
 	ag.group.POST("/send-reset-email", ag.SendResetEmail)
 	ag.group.POST("/verify-reset-code", ag.VerifyResetCode)
 	ag.group.POST("/reset-password", ag.ResetPassword)
