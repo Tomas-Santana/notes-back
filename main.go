@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"notes-back/api"
 	"os"
@@ -16,12 +15,9 @@ import (
 )
 
 func main() {
-	env := flag.String("environment", "", "environment") 
+env := flag.String("environment", "", "environment") 
 	listenaddr := flag.String("listenaddr", ":8080", "server listen address")
 	flag.Parse()
-
-	fmt.Println(env)
-
 	
 	loadEnv(*env)
 	mongo_uri := os.Getenv("MONGO_URI")
@@ -52,7 +48,6 @@ func main() {
 
 func loadEnv(env string) {
 	if env == "" {
-		fmt.Println("Loading production environment")
 		return
 	}
 	err := godotenv.Load(".env." + env)
