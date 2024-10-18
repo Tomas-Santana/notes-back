@@ -19,6 +19,6 @@ func(rg *ResourceGroup) DeleteUser(c *gin.Context) {
     return
   }
 
-	c.JSON(200, gin.H{"message": "User deleted successfully"})
+	c.JSON(200, gin.H{"_id": userId})
 
 }
