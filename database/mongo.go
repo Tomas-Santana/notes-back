@@ -321,6 +321,32 @@ func (db *MongoDatabase) DeleteCategory(id string) error {
 	coll := db.client.Database(db.dbName).Collection("category")
 
 	_, err = coll.DeleteOne(context.Background(), bson.D{{Key: "_id", Value: categoryIdObj}})
+	if err != nil {
+		return err
+	}
+
+	err = db.RemoveCategoryFromNotes(id)
+	if err!= nil {
+    return err
+  }
+
+	return nil
+}
+
+func (db *MongoDatabase) RemoveCategoryFromNotes(categoryId string) error {
+	categoryIdObj, err := primitive.ObjectIDFromHex(categoryId)
+
+  if err!= nil {
+    return err
+  }
+
+  coll := db.client.Database(db.dbName).Collection("note")
+
+  _, err = coll.UpdateMany(
+		context.Background(),
+    bson.M{},
+		bson.M{"$pull": bson.M{"categories": bson.M{"_id": categoryIdObj}}},
+	)
 
 	return err
 }
