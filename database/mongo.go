@@ -140,6 +140,32 @@ func (db *MongoDatabase) CreateUser(user *types.User) error {
 	return err
 }
 
+func (db *MongoDatabase) UpdateUser(update *requestTypes.UpdateUser) error {
+	userIdObj, err := primitive.ObjectIDFromHex(update.ID)
+	if err!= nil {
+    return err
+  }
+
+	coll := db.client.Database(db.dbName).Collection("user")
+	updateFields := make(map[string]any)
+
+	GetUserUpdateFields(update, &updateFields)
+
+	_, err = coll.UpdateOne(context.Background(), bson.D{{Key: "_id", Value: userIdObj}}, bson.D{{Key: "$set", Value: updateFields}})
+
+	return err
+}
+
+func (db *MongoDatabase) DeleteUser(id string) error {
+	userIdObj, err := primitive.ObjectIDFromHex(id)
+	if err!= nil {
+    return err
+  }
+	coll := db.client.Database(db.dbName).Collection("user")
+	_, err = coll.DeleteOne(context.Background(), bson.D{{Key: "_id", Value: userIdObj}})
+	return err
+}
+
 func (db *MongoDatabase) CreateNote(userId string, note *types.Note) (string, error) {
 
 	userIdObj, err := primitive.ObjectIDFromHex(userId)

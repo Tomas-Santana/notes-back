@@ -32,7 +32,9 @@ func (rg *ResourceGroup) RegisterRoutes() {
 	rg.group.GET("/notes", rg.MyNotes)
 	rg.group.GET("/note/:id", rg.GetNote)
 	rg.group.PUT("/note", rg.PutNote)
+	rg.group.PUT("/user", rg.PutUser)
 	rg.group.POST("/category", rg.PostCategory)
 	rg.group.GET("/categories", rg.MyCategories)
 	rg.group.DELETE("/category/:id", rg.DeleteCategory)
+	rg.group.DELETE("/user/:id", rg.DeleteUser)
 }
