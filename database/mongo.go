@@ -6,7 +6,6 @@ import (
 	"notes-back/types"
 	"notes-back/types/requestTypes"
 
-
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -106,10 +105,9 @@ func (db *MongoDatabase) DeleteResetCode(code string) error {
 func (db *MongoDatabase) UpdateUserPassword(email string, password string) error {
 	coll := db.client.Database(db.dbName).Collection("user")
 
-	_, err := coll.UpdateOne(context.Background(), 
+	_, err := coll.UpdateOne(context.Background(),
 		bson.D{{Key: "email", Value: email}},
 		bson.D{{Key: "$set", Value: bson.D{{Key: "password", Value: password}}}})
-		
 
 	return err
 }
@@ -143,16 +141,16 @@ func (db *MongoDatabase) CreateUser(user *types.User) error {
 func (db *MongoDatabase) UpdateUser(update *requestTypes.UpdateUser) error {
 	userIdObj, err := primitive.ObjectIDFromHex(update.ID)
 	fmt.Println(userIdObj)
-	if err!= nil {
-    return err
-  }
+	if err != nil {
+		return err
+	}
 
 	coll := db.client.Database(db.dbName).Collection("user")
 	updateFields := make(map[string]any)
 
 	GetUserUpdateFields(update, &updateFields)
-	fmt.Println("campos",updateFields)
-	fmt.Println("request",update)
+	fmt.Println("campos", updateFields)
+	fmt.Println("request", update)
 
 	result, err := coll.UpdateOne(context.Background(), bson.D{{Key: "_id", Value: userIdObj}}, bson.D{{Key: "$set", Value: updateFields}})
 	if err != nil {
@@ -168,9 +166,9 @@ func (db *MongoDatabase) UpdateUser(update *requestTypes.UpdateUser) error {
 
 func (db *MongoDatabase) DeleteUser(id string) error {
 	userIdObj, err := primitive.ObjectIDFromHex(id)
-	if err!= nil {
-    return err
-  }
+	if err != nil {
+		return err
+	}
 	coll := db.client.Database(db.dbName).Collection("user")
 	_, err = coll.DeleteOne(context.Background(), bson.D{{Key: "_id", Value: userIdObj}})
 	return err
@@ -214,7 +212,7 @@ func (db *MongoDatabase) UpdateNote(userID string, update *requestTypes.UpdateNo
 
 	fmt.Println(updateFields)
 
-	_, err = coll.UpdateOne(context.Background(), bson.D{{Key: "_id", Value: noteIdObj}, {Key: "userID", Value: userIDObj,}}, bson.D{{Key: "$set", Value: updateFields}})
+	_, err = coll.UpdateOne(context.Background(), bson.D{{Key: "_id", Value: noteIdObj}, {Key: "userID", Value: userIDObj}}, bson.D{{Key: "$set", Value: updateFields}})
 
 	return err
 }
@@ -230,6 +228,40 @@ func (db *MongoDatabase) GetUserNotes(userId string) ([]types.Note, error) {
 
 	filter := bson.D{{Key: "userID", Value: userIdObj}}
 	projection := options.Find().SetProjection(bson.D{{Key: "content", Value: 0}, {Key: "html", Value: 0}})
+	cursor, err := coll.Find(context.Background(), filter, projection)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var notes []types.Note
+
+	err = cursor.All(context.Background(), &notes)
+
+	return notes, err
+}
+
+func (db *MongoDatabase) SearchUserNotes(query string, userID string) ([]types.Note, error) {
+	userIdObj, err := primitive.ObjectIDFromHex(userID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	coll := db.client.Database(db.dbName).Collection("note")
+
+	fmt.Println(query, "query")
+
+	filter := bson.D{
+		{Key: "$text", Value: bson.D{{Key: "$search", Value: query}}},
+		{Key: "userID", Value: userIdObj}}
+	projection := options.Find().SetProjection(bson.D{
+		{Key: "title", Value: 1},
+		{Key: "content", Value: 1},
+		{Key: "importance", Value: 1},
+		{Key: "updatedAt", Value: 1},
+		{Key: "_id", Value: 1},
+	}).SetLimit(25)
 	cursor, err := coll.Find(context.Background(), filter, projection)
 
 	if err != nil {
@@ -264,9 +296,9 @@ func (db *MongoDatabase) DeleteNote(ids []string) error {
 
 	for _, id := range ids {
 		objectId, err := primitive.ObjectIDFromHex(id)
-		if err!= nil {
-      return err
-    }
+		if err != nil {
+			return err
+		}
 		objectIds = append(objectIds, objectId)
 	}
 
@@ -278,17 +310,17 @@ func (db *MongoDatabase) DeleteNote(ids []string) error {
 	return err
 }
 
-func (db *MongoDatabase) DeleteNoteById(id string) (error) {
+func (db *MongoDatabase) DeleteNoteById(id string) error {
 	noteIdObj, err := primitive.ObjectIDFromHex(id)
 
-  if err!= nil {
-    return err
-  }
+	if err != nil {
+		return err
+	}
 
-  coll := db.client.Database(db.dbName).Collection("note")
-  _, err = coll.DeleteOne(context.Background(), bson.D{{Key: "_id", Value: noteIdObj}})
+	coll := db.client.Database(db.dbName).Collection("note")
+	_, err = coll.DeleteOne(context.Background(), bson.D{{Key: "_id", Value: noteIdObj}})
 
-  return err
+	return err
 }
 
 func (db *MongoDatabase) CreateCategory(category *types.Category) error {
@@ -350,7 +382,6 @@ func (db *MongoDatabase) GetCategories(userId string) ([]types.Category, error) 
 func (db *MongoDatabase) DeleteCategory(id string, userID string) error {
 	categoryIdObj, err := primitive.ObjectIDFromHex(id)
 
-
 	if err != nil {
 		return err
 	}
@@ -369,26 +400,21 @@ func (db *MongoDatabase) DeleteCategory(id string, userID string) error {
 	}
 
 	err = db.RemoveCategoryFromNotes(id)
-	if err!= nil {
-    return err
-  }
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
 
 func (db *MongoDatabase) RemoveCategoryFromNotes(categoryId string) error {
-	categoryIdObj, err := primitive.ObjectIDFromHex(categoryId)
 
-  if err!= nil {
-    return err
-  }
+	coll := db.client.Database(db.dbName).Collection("note")
 
-  coll := db.client.Database(db.dbName).Collection("note")
-
-  _, err = coll.UpdateMany(
+	_, err := coll.UpdateMany(
 		context.Background(),
-    bson.M{},
-		bson.M{"$pull": bson.M{"categories": bson.M{"_id": categoryIdObj}}},
+		bson.M{"categories._id": categoryId},
+		bson.M{"$pull": bson.M{"categories": bson.M{"_id": categoryId}}},
 	)
 
 	return err
