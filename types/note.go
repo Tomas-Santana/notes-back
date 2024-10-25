@@ -7,7 +7,6 @@ import (
 type Note struct {
 	ID         string      `bson:"_id,omitempty" json:"_id"`
 	Title      string      `bson:"title" json:"title"`
-	Preview    string      `bson:"preview" json:"preview"`
 	Content    string      `bson:"content" json:"content"`
 	Html       string      `bson:"html" json:"html"`
 	IsFavorite bool        `bson:"isFavorite" json:"isFavorite"`

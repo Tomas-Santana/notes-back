@@ -227,7 +227,7 @@ func (db *MongoDatabase) GetUserNotes(userId string) ([]types.Note, error) {
 	coll := db.client.Database(db.dbName).Collection("note")
 
 	filter := bson.D{{Key: "userID", Value: userIdObj}}
-	projection := options.Find().SetProjection(bson.D{{Key: "content", Value: 0}, {Key: "html", Value: 0}})
+	projection := options.Find().SetProjection(bson.D{{Key: "preview", Value: 0}})
 	cursor, err := coll.Find(context.Background(), filter, projection)
 
 	if err != nil {

@@ -2,7 +2,6 @@ package database
 
 import (
 	"notes-back/types/requestTypes"
-	"unicode/utf8"
 )
 
 func GetNoteUpdateFields(update *requestTypes.UpdateNote, fields *map[string]any) {
@@ -33,16 +32,6 @@ func GetNoteUpdateFields(update *requestTypes.UpdateNote, fields *map[string]any
 
 	if update.UpdatedAt != nil {
 		(*fields)["updatedAt"] = *update.UpdatedAt
-	}
-
-	if _, ok := (*fields)["content"]; ok {
-		var preview string
-		if utf8.RuneCountInString((*fields)["content"].(string)) > 100 {
-			preview = (*fields)["content"].(string)[:100]
-		} else {
-			preview = (*fields)["content"].(string)
-		}
-		(*fields)["preview"] = preview
 	}
 	
 }

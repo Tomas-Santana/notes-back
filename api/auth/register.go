@@ -1,14 +1,16 @@
 package auth
 
 import (
+	"fmt"
 	"notes-back/controllers/auth"
 	"notes-back/helpers"
 	"notes-back/types"
 
 	"notes-back/types/requestTypes"
 
-	"github.com/gin-gonic/gin"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 func (a *AuthRouter) Register(c *gin.Context) {
@@ -51,6 +53,7 @@ func (a *AuthRouter) VerifyEmailAvialability(c *gin.Context) {
 	)
 
 	if err != nil {
+		fmt.Println(err)
 		c.JSON(200, gin.H{
 			"available": true,
 		})

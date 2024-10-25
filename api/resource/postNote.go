@@ -6,9 +6,6 @@ import (
 	"notes-back/types"
 	"notes-back/types/requestTypes"
 	"time"
-
-	"unicode/utf8"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -31,21 +28,12 @@ func (rg *ResourceGroup) PostNote(c *gin.Context) {
 	if err := helpers.ValidatePayload(c, rg.validator, &newNote); err != nil {
 		return
 	}
-	fmt.Println("noteimportance", newNote)
-
-	var preview string
-	if utf8.RuneCountInString(newNote.Content) < 100 {
-		preview = newNote.Content
-	} else {
-		preview = newNote.Content[:100]
-	}
 
 	note := types.Note{
 		Title:     newNote.Title,
 		Content:   newNote.Content,
 		Html:      newNote.Html,
 		CreatedAt: time.Now(),
-		Preview:   preview,
 		UpdatedAt: time.Now(),
 		Importance: newNote.Importance,
 		Categories: newNote.Categories,
