@@ -22,7 +22,7 @@ func GetNoteUpdateFields(update *requestTypes.UpdateNote, fields *map[string]any
 		(*fields)["isFavorite"] = *update.IsFavorite
 	}
 
-	if update.Importance != nil {
+	if update.Importance != nil && *update.Importance >= 0 && *update.Importance <= 5 {
 		(*fields)["importance"] = *update.Importance
 	}
 

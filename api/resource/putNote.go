@@ -1,7 +1,6 @@
 package resource
 
 import (
-	"fmt"
 	"notes-back/helpers"
 	"notes-back/types/requestTypes"
 	"github.com/gin-gonic/gin"
@@ -9,8 +8,6 @@ import (
 
 func (rg *ResourceGroup) PutNote(c *gin.Context) {
 	var noteUpdate requestTypes.UpdateNote
-
-	fmt.Println("categorias", noteUpdate.Title)
 
 	userID, ok := c.Get("userID")
 

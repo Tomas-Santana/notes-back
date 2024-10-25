@@ -20,7 +20,7 @@ type UpdateNote struct {
 	Content    *string `json:"content" binding:"omitempty,min=1,max=500"`
 	Html       *string `json:"html" binding:"omitempty,min=3,max=1000"`
 	IsFavorite *bool   `json:"isFavorite"`
-	Importance *int    `json:"importance" binding:"min=0,max=5"`
+	Importance *int    `json:"importance"`
 	Categories *[]types.NoteCategory `json:"categories"`
 	UpdatedAt  *time.Time   `bson:"updatedAt" json:"updatedAt"`
 }
