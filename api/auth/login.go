@@ -1,13 +1,15 @@
 package auth
 
 import (
+	"fmt"
 	"notes-back/controllers/auth"
 	"notes-back/helpers"
 
 	"notes-back/types/requestTypes"
 
-	"github.com/gin-gonic/gin"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 func (a *AuthRouter) Login(c *gin.Context) {
@@ -21,6 +23,7 @@ func (a *AuthRouter) Login(c *gin.Context) {
 	)
 
 	if err != nil {
+		fmt.Println("login error:", err)
 		c.JSON(401, gin.H{"error": "Email o contraseña incorrectos"})
 		return
 	}
