@@ -17,7 +17,7 @@ func PasswordResetTemplate(code string, name string) string {
     <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation" style="max-width:37.5em;background-color:#191919;border:1px solid #f0f0f0;padding:45px">
       <tbody>
         <tr style="width:100%">
-          <td><img alt="Notebit" height="45" src="https://firebasestorage.googleapis.com/v0/b/cervant-admin-panel.appspot.com/o/tenants%2Fpublic%2Fnotebit%2Flogo.png?alt=media" style="display:block;outline:none;border:none;text-decoration:none" width="233" />
+          <td><img alt="Notebit" height="56" src="https://firebasestorage.googleapis.com/v0/b/cervant-admin-panel.appspot.com/o/tenants%2Fpublic%2Fnotebit%2Flogo.png?alt=media" style="display:block;outline:none;border:none;text-decoration:none" width="233" />
             <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation">
               <tbody>
                 <tr>
